@@ -1,0 +1,31 @@
+{
+  "data": [
+    {
+      "numeroControlePNCP": "01612092000123-1-000045/2026",
+      "dataPublicacaoPncp": "2026-07-13T08:12:00",
+      "objetoCompra": "Aquisição de máquinas agrícolas para o programa estadual de mecanização do agronegócio",
+      "modalidadeNome": "Pregão Eletrônico",
+      "valorTotalEstimado": 1250000.5,
+      "anoCompra": 2026,
+      "sequencialCompra": 45,
+      "orgaoEntidade": {"cnpj": "01612092000123", "razaoSocial": "Secretaria de Estado da Agricultura de Goiás"},
+      "unidadeOrgao": {"ufSigla": "GO", "municipioNome": "Goiânia"}
+    },
+    {
+      "numeroControlePNCP": "01612092000123-1-000046/2026",
+      "dataPublicacaoPncp": "2026-07-14T10:00:00",
+      "objetoCompra": "Compra de material de escritório",
+      "modalidadeNome": "Pregão Eletrônico",
+      "valorTotalEstimado": 12000.0,
+      "anoCompra": 2026,
+      "sequencialCompra": 46,
+      "orgaoEntidade": {"cnpj": "01612092000123", "razaoSocial": "Secretaria de Estado da Agricultura de Goiás"},
+      "unidadeOrgao": {"ufSigla": "GO", "municipioNome": "Goiânia"}
+    }
+  ],
+  "totalRegistros": 2,
+  "totalPaginas": 1,
+  "numeroPagina": 1,
+  "paginasRestantes": 0,
+  "empty": false
+}

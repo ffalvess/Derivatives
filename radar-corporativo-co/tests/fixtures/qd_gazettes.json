@@ -1,0 +1,30 @@
+{
+  "total_gazettes": 2,
+  "gazettes": [
+    {
+      "territory_id": "5107925",
+      "territory_name": "Sorriso",
+      "state_code": "MT",
+      "date": "2026-07-14",
+      "url": "https://queridodiario.ok.org.br/gazettes/5107925/2026-07-14",
+      "txt_url": "https://queridodiario.ok.org.br/gazettes/5107925/2026-07-14.txt",
+      "is_extra_edition": false,
+      "excerpts": [
+        "Fica deferido o pedido de recuperação judicial da empresa Agro Sorriso Ltda...",
+        "Edital de leilão público de bens móveis do município..."
+      ]
+    },
+    {
+      "territory_id": "5103403",
+      "territory_name": "Cuiabá",
+      "state_code": "MT",
+      "date": "2026-07-15",
+      "url": "https://queridodiario.ok.org.br/gazettes/5103403/2026-07-15",
+      "txt_url": "https://queridodiario.ok.org.br/gazettes/5103403/2026-07-15.txt",
+      "is_extra_edition": true,
+      "excerpts": [
+        "Alteração contratual da sociedade empresária Cuiabá Trading S.A..."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+# Fontes e parâmetros do Radar Corporativo Centro-Oeste.
+# Tudo aqui é dado: adicionar/remover fonte ou termo não exige mudança de código.
+#
+# `verificado: false` = URL candidata, ainda não confirmada ao vivo.
+# Rode `python -m src --checar-fontes` para testar todos os feeds e podar a lista.
+
+estados: [GO, DF, MT, MS]
+
+rss:
+  # --- Regionais (uf fixa) ---
+  - nome: "G1 Goiás"
+    uf: GO
+    url: "https://g1.globo.com/rss/g1/goias/"
+    url_alternativa: "http://g1.globo.com/dynamo/goias/rss2.xml"
+    verificado: false
+  - nome: "G1 Distrito Federal"
+    uf: DF
+    url: "https://g1.globo.com/rss/g1/distrito-federal/"
+    url_alternativa: "http://g1.globo.com/dynamo/distrito-federal/rss2.xml"
+    verificado: false
+  - nome: "G1 Mato Grosso"
+    uf: MT
+    url: "https://g1.globo.com/rss/g1/mato-grosso/"
+    url_alternativa: "http://g1.globo.com/dynamo/mato-grosso/rss2.xml"
+    verificado: false
+  - nome: "G1 Mato Grosso do Sul"
+    uf: MS
+    url: "https://g1.globo.com/rss/g1/mato-grosso-do-sul/"
+    url_alternativa: "http://g1.globo.com/dynamo/mato-grosso-do-sul/rss2.xml"
+    verificado: false
+  - nome: "Campo Grande News"
+    uf: MS
+    url: "https://www.campograndenews.com.br/rss"
+    verificado: false
+  - nome: "Midiamax"
+    uf: MS
+    url: "https://midiamax.com.br/feed/"
+    verificado: false
+  - nome: "Correio Braziliense (Economia)"
+    uf: DF
+    url: "https://www.correiobraziliense.com.br/rss/noticia/economia.xml"
+    verificado: false
+
+  # --- Nacionais de economia/agro (itens entram só se atribuíveis à região
+  #     ou ao foco internacional; ver filtro/cidades_uf) ---
+  - nome: "Valor Econômico"
+    abrangencia: nacional
+    url: "https://pox.globo.com/rss/valor/"
+    verificado: false
+  - nome: "Exame"
+    abrangencia: nacional
+    url: "https://exame.com/feed/"
+    verificado: false
+  - nome: "Globo Rural"
+    abrangencia: nacional
+    url: "https://pox.globo.com/rss/globorural/"
+    url_alternativa: "https://g1.globo.com/rss/g1/economia/agronegocios/"
+    verificado: false
+  - nome: "Notícias Agrícolas"
+    abrangencia: nacional
+    url: "https://www.noticiasagricolas.com.br/rss/"
+    verificado: false
+  - nome: "Canal Rural"
+    abrangencia: nacional
+    url: "https://www.canalrural.com.br/feed/"
+    verificado: false
+
+filtro:
+  # Termos de negócios internacionais: itens que casam ganham destaque
+  # na seção de abertura "Radar Internacional". Matching por palavra
+  # inteira, sem acentos e sem diferença de caixa.
+  termos_internacionais:
+    - exportação
+    - exportações
+    - exportadora
+    - exportador
+    - importação
+    - importações
+    - importadora
+    - embarques
+    - comércio exterior
+    - balança comercial
+    - mercado externo
+    - mercado internacional
+    - investimento estrangeiro
+    - investimento direto estrangeiro
+    - capital estrangeiro
+    - investidor estrangeiro
+    - joint venture
+    - trading
+    - multinacional
+    - acordo comercial
+    - tarifa
+    - tarifas
+    - china
+    - chinês
+    - chinesa
+    - mercosul
+    - união europeia
+    - hub logístico
+    - zona de processamento de exportação
+
+  # Termos corporativos gerais: relevância mínima para notícia entrar na edição.
+  termos_corporativos:
+    - empresa
+    - empresas
+    - negócios
+    - indústria
+    - agronegócio
+    - investimento
+    - investimentos
+    - fábrica
+    - expansão
+    - inauguração
+    - geração de empregos
+    - contratações
+    - demissões
+    - falência
+    - recuperação judicial
+    - fusão
+    - aquisição
+    - startup
+    - frigorífico
+    - usina
+    - mineradora
+    - varejo
+    - atacadista
+    - cooperativa
+    - safra
+    - soja
+    - milho
+    - algodão
+    - pecuária
+    - etanol
+    - biodiesel
+
+# Estados e cidades-chave usados para atribuir UF a itens de feeds nacionais.
+# Termos mais longos têm precedência ("mato grosso do sul" antes de "mato grosso",
+# "lucas do rio verde" antes de "rio verde").
+cidades_uf:
+  GO: [goiás, goiano, goiana, goiânia, anápolis, aparecida de goiânia, rio verde,
+       catalão, itumbiara, jataí, luziânia]
+  DF: [distrito federal, brasília, brasiliense]
+  MT: [mato grosso, mato-grossense, cuiabá, várzea grande, rondonópolis, sinop,
+       sorriso, nova mutum, lucas do rio verde, primavera do leste, tangará da serra]
+  MS: [mato grosso do sul, sul-mato-grossense, campo grande, dourados,
+       três lagoas, corumbá, maracaju, ponta porã]
+
+pncp:
+  base_url: "https://pncp.gov.br/api/consulta"
+  # Códigos de modalidade exigidos pela API (confirmar tabela no Swagger:
+  # https://pncp.gov.br/api/consulta/swagger-ui/index.html)
+  modalidades: [6, 8]        # 6 = pregão eletrônico, 8 = dispensa de licitação
+  tamanho_pagina: 50
+  max_paginas_por_uf: 4
+  valor_minimo: 500000       # só licitações com valorTotalEstimado >= R$ 500 mil
+
+querido_diario:
+  base_url: "https://queridodiario.ok.org.br/api"
+  # Cobertura do QD é municipal: capitais + polos econômicos/do agro (códigos IBGE).
+  territorios:
+    GO: [5208707, 5201108, 5201405, 5218805]   # Goiânia, Anápolis, Ap. de Goiânia, Rio Verde
+    DF: [5300108]                               # Brasília
+    MT: [5103403, 5108402, 5107925, 5107909, 5106224, 5107602]
+        # Cuiabá, Várzea Grande, Sorriso, Sinop, Nova Mutum, Rondonópolis
+    MS: [5002704, 5003702]                      # Campo Grande, Dourados
+  querystring: '"recuperação judicial" OR "falência" OR "contrato social" OR "alteração contratual" OR "leilão" OR "concessão" OR "exportação"'
+  excerpt_size: 400
+  number_of_excerpts: 2
+  size: 30
