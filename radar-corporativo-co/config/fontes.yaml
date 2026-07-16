@@ -12,33 +12,34 @@ rss:
     uf: GO
     url: "https://g1.globo.com/rss/g1/goias/"
     url_alternativa: "http://g1.globo.com/dynamo/goias/rss2.xml"
-    verificado: false
+    verificado: true
   - nome: "G1 Distrito Federal"
     uf: DF
     url: "https://g1.globo.com/rss/g1/distrito-federal/"
     url_alternativa: "http://g1.globo.com/dynamo/distrito-federal/rss2.xml"
-    verificado: false
+    verificado: true
   - nome: "G1 Mato Grosso"
     uf: MT
     url: "https://g1.globo.com/rss/g1/mato-grosso/"
     url_alternativa: "http://g1.globo.com/dynamo/mato-grosso/rss2.xml"
-    verificado: false
+    verificado: true
   - nome: "G1 Mato Grosso do Sul"
     uf: MS
     url: "https://g1.globo.com/rss/g1/mato-grosso-do-sul/"
     url_alternativa: "http://g1.globo.com/dynamo/mato-grosso-do-sul/rss2.xml"
-    verificado: false
+    verificado: true
   - nome: "Campo Grande News"
     uf: MS
     url: "https://www.campograndenews.com.br/rss"
-    verificado: false
+    verificado: true
   - nome: "Midiamax"
     uf: MS
     url: "https://midiamax.com.br/feed/"
-    verificado: false
+    verificado: true
   - nome: "Correio Braziliense (Economia)"
     uf: DF
-    url: "https://www.correiobraziliense.com.br/rss/noticia/economia.xml"
+    url: "https://www.correiobraziliense.com.br/economia/feed"
+    url_alternativa: "https://www.correiobraziliense.com.br/feed"
     verificado: false
 
   # --- Nacionais de economia/agro (itens entram só se atribuíveis à região
@@ -46,24 +47,25 @@ rss:
   - nome: "Valor Econômico"
     abrangencia: nacional
     url: "https://pox.globo.com/rss/valor/"
-    verificado: false
+    verificado: true
   - nome: "Exame"
     abrangencia: nacional
     url: "https://exame.com/feed/"
-    verificado: false
+    verificado: true
   - nome: "Globo Rural"
     abrangencia: nacional
     url: "https://pox.globo.com/rss/globorural/"
     url_alternativa: "https://g1.globo.com/rss/g1/economia/agronegocios/"
-    verificado: false
+    verificado: true
   - nome: "Notícias Agrícolas"
     abrangencia: nacional
-    url: "https://www.noticiasagricolas.com.br/rss/"
+    url: "https://www.noticiasagricolas.com.br/rss/noticias"
+    url_alternativa: "https://www.noticiasagricolas.com.br/feed"
     verificado: false
   - nome: "Canal Rural"
     abrangencia: nacional
     url: "https://www.canalrural.com.br/feed/"
-    verificado: false
+    verificado: true
 
 filtro:
   # Termos de negócios internacionais: itens que casam ganham destaque
