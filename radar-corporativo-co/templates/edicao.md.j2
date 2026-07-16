@@ -1,0 +1,52 @@
+# Radar Corporativo Centro-Oeste — Edição {{ edicao.codigo }}
+
+*{{ edicao.inicio|data_br }} a {{ edicao.fim|data_br }} · GO · DF · MT · MS*
+
+{% if edicao.radar_internacional %}
+## 🌍 Radar Internacional
+
+{% for item in edicao.radar_internacional %}
+- **[{{ item.titulo }}]({{ item.url }})** `{{ item.uf|nome_uf }}`
+  *{{ item.fonte }} · {{ item.publicado_em|data_br }}*{% if item.resumo %} — {{ item.resumo }}{% endif %}
+
+{% endfor %}
+{% endif %}
+{% for uf, bloco in edicao.por_uf.items() %}
+## {{ bloco.nome }}
+
+{% for item in bloco.noticias %}
+- **[{{ item.titulo }}]({{ item.url }})**
+  *{{ item.fonte }} · {{ item.publicado_em|data_br }}*{% if item.resumo %} — {{ item.resumo }}{% endif %}
+
+{% endfor %}
+{% if bloco.diarios %}
+### Diários oficiais
+
+{% for item in bloco.diarios %}
+- **[{{ item.titulo }}]({{ item.url }})**{% if item.resumo %} — {{ item.resumo }}{% endif %}
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% if incluir_licitacoes and edicao.licitacoes_por_uf %}
+---
+
+## Anexo — Licitações (PNCP)
+
+*Bloco à parte do conteúdo editorial: oportunidades públicas captadas no Portal Nacional de Contratações Públicas.*
+
+{% for uf, itens in edicao.licitacoes_por_uf.items() %}
+### {{ uf|nome_uf }}
+
+{% for item in itens %}
+- **[{{ item.titulo }}]({{ item.url }})** — {{ item.extra.get('valor')|moeda_br }} · {{ item.extra.get('municipio') or uf }} · publicado em {{ item.publicado_em|data_br }}
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+---
+
+*Gerado automaticamente pelo Radar Corporativo Centro-Oeste (agregação de fontes públicas, sem uso de IA).*
+{% if edicao.fontes_com_erro %}
+*Fontes indisponíveis nesta edição: {{ edicao.fontes_com_erro|join(', ') }}.*
+{% endif %}

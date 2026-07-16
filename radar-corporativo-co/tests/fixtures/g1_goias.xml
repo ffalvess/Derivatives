@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>G1 Goiás</title>
+    <link>https://g1.globo.com/go/goias/</link>
+    <description>Notícias de Goiás</description>
+    <item>
+      <title>Frigorífico anuncia expansão e 500 empregos em Rio Verde</title>
+      <link>https://g1.globo.com/go/goias/noticia/2026/07/14/frigorifico-expansao.ghtml</link>
+      <description><![CDATA[<p>Empresa do setor de proteína animal vai ampliar planta para atender <b>exportações</b> à China.</p>]]></description>
+      <pubDate>Tue, 14 Jul 2026 09:00:00 -0300</pubDate>
+    </item>
+    <item>
+      <title>Festival de música movimenta o fim de semana em Goiânia</title>
+      <link>https://g1.globo.com/go/goias/noticia/2026/07/13/festival-musica.ghtml</link>
+      <description>Programação cultural gratuita no parque.</description>
+      <pubDate>Mon, 13 Jul 2026 18:30:00 -0300</pubDate>
+    </item>
+    <item>
+      <title>Notícia antiga fora da janela da edição</title>
+      <link>https://g1.globo.com/go/goias/noticia/2026/06/01/antiga.ghtml</link>
+      <description>Empresa abriu vagas há muito tempo.</description>
+      <pubDate>Mon, 01 Jun 2026 10:00:00 -0300</pubDate>
+    </item>
+    <item>
+      <title>Item sem data recebe a data final da janela</title>
+      <link>https://g1.globo.com/go/goias/noticia/sem-data.ghtml</link>
+      <description>Indústria local recebe investimentos.</description>
+    </item>
+  </channel>
+</rss>

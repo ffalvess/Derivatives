@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radar Corporativo Centro-Oeste — Edição {{ edicao.codigo }}</title>
+<style>
+  :root { color-scheme: light; }
+  body { font-family: Georgia, 'Times New Roman', serif; background:#f6f4ef; color:#22211e;
+         margin:0; padding:24px 12px; }
+  .folha { max-width:720px; margin:0 auto; background:#fffdf8; border:1px solid #e3ded2;
+           padding:36px 40px; }
+  header { border-bottom:3px double #1f3a2d; padding-bottom:16px; margin-bottom:24px; }
+  h1 { font-size:1.7rem; margin:0; color:#1f3a2d; letter-spacing:.02em; }
+  .periodo { color:#6d675c; font-size:.9rem; margin-top:6px; }
+  h2 { font-size:1.05rem; text-transform:uppercase; letter-spacing:.12em; color:#1f3a2d;
+       border-bottom:1px solid #cfc9ba; padding-bottom:6px; margin:32px 0 12px; }
+  h3 { font-size:.95rem; color:#4a4437; margin:18px 0 8px; }
+  .item { margin:0 0 14px; }
+  .item a { color:#173d63; text-decoration:none; font-weight:bold; }
+  .item a:hover { text-decoration:underline; }
+  .meta { color:#8a8375; font-size:.78rem; }
+  .resumo { margin:2px 0 0; font-size:.9rem; line-height:1.45; }
+  .selo-int { background:#1f3a2d; color:#fffdf8; font-size:.68rem; padding:1px 7px;
+              border-radius:9px; vertical-align:middle; letter-spacing:.05em;
+              white-space:nowrap; }
+  .anexo { margin-top:36px; border-top:3px double #8c2f22; padding-top:14px; }
+  .anexo h2 { color:#8c2f22; border-bottom-color:#dcc9c4; }
+  .anexo .aviso { font-size:.8rem; color:#6d675c; font-style:italic; }
+  .licitacao { background:#faf6ef; border:1px solid #e8e0cd; padding:10px 14px;
+               margin-bottom:10px; font-size:.88rem; }
+  .licitacao .valor { color:#8c2f22; font-weight:bold; }
+  footer { margin-top:36px; border-top:1px solid #cfc9ba; padding-top:12px;
+           font-size:.75rem; color:#8a8375; }
+  .erro-fontes { color:#8c2f22; }
+</style>
+</head>
+<body>
+<div class="folha">
+  <header>
+    <h1>Radar Corporativo Centro-Oeste</h1>
+    <div class="periodo">Edição {{ edicao.codigo }} · {{ edicao.inicio|data_br }} a {{ edicao.fim|data_br }} · GO · DF · MT · MS</div>
+  </header>
+
+  {% if edicao.radar_internacional %}
+  <section>
+    <h2>🌍 Radar Internacional</h2>
+    {% for item in edicao.radar_internacional %}
+    <div class="item">
+      <a href="{{ item.url }}">{{ item.titulo }}</a>
+      <span class="selo-int">{{ item.uf|nome_uf }}</span>
+      <div class="meta">{{ item.fonte }} · {{ item.publicado_em|data_br }}</div>
+      {% if item.resumo %}<p class="resumo">{{ item.resumo }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% for uf, bloco in edicao.por_uf.items() %}
+  <section>
+    <h2>{{ bloco.nome }}</h2>
+    {% for item in bloco.noticias %}
+    <div class="item">
+      <a href="{{ item.url }}">{{ item.titulo }}</a>
+      <div class="meta">{{ item.fonte }} · {{ item.publicado_em|data_br }}</div>
+      {% if item.resumo %}<p class="resumo">{{ item.resumo }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    {% if bloco.diarios %}
+    <h3>Diários oficiais</h3>
+    {% for item in bloco.diarios %}
+    <div class="item">
+      <a href="{{ item.url }}">{{ item.titulo }}</a>
+      <div class="meta">{{ item.fonte }}</div>
+      {% if item.resumo %}<p class="resumo">{{ item.resumo }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+  </section>
+  {% endfor %}
+
+  {% if incluir_licitacoes and edicao.licitacoes_por_uf %}
+  <section class="anexo">
+    <h2>Anexo — Licitações (PNCP)</h2>
+    <p class="aviso">Bloco à parte do conteúdo editorial: oportunidades públicas captadas no Portal Nacional de Contratações Públicas.</p>
+    {% for uf, itens in edicao.licitacoes_por_uf.items() %}
+    <h3>{{ uf|nome_uf }}</h3>
+    {% for item in itens %}
+    <div class="licitacao">
+      <a href="{{ item.url }}">{{ item.titulo }}</a><br>
+      <span class="valor">{{ item.extra.get('valor')|moeda_br }}</span>
+      <span class="meta"> · {{ item.extra.get('municipio') or uf }} · publicado em {{ item.publicado_em|data_br }}</span>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <footer>
+    Gerado automaticamente pelo Radar Corporativo Centro-Oeste (agregação de fontes públicas, sem uso de IA).
+    {% if edicao.fontes_com_erro %}
+    <div class="erro-fontes">Fontes indisponíveis nesta edição: {{ edicao.fontes_com_erro|join(', ') }}.</div>
+    {% endif %}
+  </footer>
+</div>
+</body>
+</html>
