@@ -6,10 +6,10 @@ pré-filtrados na fonte):
 - Item que casa com ``termos_internacionais`` é marcado ``internacional`` e
   ganha destaque na seção "Radar Internacional" da edição.
 - Item regional entra se casar com termos internacionais OU corporativos.
-- Item de feed nacional entra se mencionar um estado/cidade-chave da região
-  (recebe essa UF) ou, sem menção regional, se for internacional (vai para
-  a seção "Radar Internacional — Brasil" com UF "BR"). Caso contrário, é
-  descartado.
+- Item de feed nacional SÓ entra se mencionar um estado/cidade-chave da
+  região (recebe essa UF) e ainda casar com algum termo de relevância.
+  Sem menção regional, é descartado — mesmo que seja tema internacional;
+  a newsletter é do Centro-Oeste, não um clipping nacional.
 
 Matching por palavra inteira, sem acentos e sem diferença de caixa.
 """
@@ -20,7 +20,7 @@ import unicodedata
 from dataclasses import replace
 
 from .config import ConfigFiltro
-from .models import SECAO_NOTICIAS, UF_BRASIL, Item
+from .models import SECAO_NOTICIAS, Item
 
 
 def normalizar(texto: str) -> str:
@@ -63,11 +63,7 @@ class Filtro:
 
             if item.extra.get("nacional"):
                 uf = self._atribuir_uf(texto)
-                if uf is None:
-                    if not internacional:
-                        continue
-                    uf = UF_BRASIL
-                elif not (internacional or corporativo):
+                if uf is None or not (internacional or corporativo):
                     continue
                 item = replace(item, uf=uf)
             elif not (internacional or corporativo):

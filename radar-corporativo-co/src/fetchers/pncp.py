@@ -6,6 +6,7 @@ A modalidade é obrigatória, então iteramos sobre a lista configurada.
 """
 from __future__ import annotations
 
+import time
 from datetime import date
 
 import requests
@@ -58,35 +59,52 @@ def _mapear(registro: dict, uf: str) -> Item:
 
 def buscar_pncp(sessao: requests.Session, cfg: ConfigPNCP, ufs: tuple[str, ...],
                 inicio: date, fim: date) -> list[Item]:
+    """Consulta paginada por UF × modalidade, com pausa entre requisições
+    (a API limita a taxa) e isolamento de erro por UF/modalidade: uma falha
+    não descarta o que já foi coletado. Se TUDO falhar, propaga o último erro.
+    """
     itens: list[Item] = []
     vistos: set[str] = set()
+    ultima_excecao: Exception | None = None
+    houve_sucesso = False
+    primeira = True
     for uf in ufs:
         for modalidade in cfg.modalidades:
-            for pagina in range(1, cfg.max_paginas_por_uf + 1):
-                params = {
-                    "dataInicial": inicio.strftime("%Y%m%d"),
-                    "dataFinal": fim.strftime("%Y%m%d"),
-                    "codigoModalidadeContratacao": modalidade,
-                    "uf": uf,
-                    "pagina": pagina,
-                    "tamanhoPagina": cfg.tamanho_pagina,
-                }
-                resposta = get_com_retry(
-                    sessao, f"{cfg.base_url}/v1/contratacoes/publicacao", params=params
-                )
-                corpo = resposta.json() or {}
-                registros = corpo.get("data") or []
-                if not registros:
-                    break
-                for registro in registros:
-                    valor = registro.get("valorTotalEstimado") or 0
-                    if valor < cfg.valor_minimo:
-                        continue
-                    item = _mapear(registro, uf)
-                    if item.url in vistos:
-                        continue
-                    vistos.add(item.url)
-                    itens.append(item)
-                if len(registros) < cfg.tamanho_pagina:
-                    break
+            try:
+                for pagina in range(1, cfg.max_paginas_por_uf + 1):
+                    if not primeira and cfg.pausa_segundos > 0:
+                        time.sleep(cfg.pausa_segundos)
+                    primeira = False
+                    params = {
+                        "dataInicial": inicio.strftime("%Y%m%d"),
+                        "dataFinal": fim.strftime("%Y%m%d"),
+                        "codigoModalidadeContratacao": modalidade,
+                        "uf": uf,
+                        "pagina": pagina,
+                        "tamanhoPagina": cfg.tamanho_pagina,
+                    }
+                    resposta = get_com_retry(
+                        sessao, f"{cfg.base_url}/v1/contratacoes/publicacao",
+                        params=params,
+                    )
+                    corpo = resposta.json() or {}
+                    registros = corpo.get("data") or []
+                    if not registros:
+                        break
+                    for registro in registros:
+                        valor = registro.get("valorTotalEstimado") or 0
+                        if valor < cfg.valor_minimo:
+                            continue
+                        item = _mapear(registro, uf)
+                        if item.url in vistos:
+                            continue
+                        vistos.add(item.url)
+                        itens.append(item)
+                    if len(registros) < cfg.tamanho_pagina:
+                        break
+                houve_sucesso = True
+            except requests.RequestException as exc:
+                ultima_excecao = exc
+    if not houve_sucesso and ultima_excecao is not None:
+        raise ultima_excecao
     return itens

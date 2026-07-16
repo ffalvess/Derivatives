@@ -75,18 +75,20 @@ def test_lucas_do_rio_verde_nao_vira_goias():
     assert itens[0].uf == "MT"
 
 
-def test_nacional_internacional_sem_mencao_vai_para_br():
+def test_nacional_sem_mencao_regional_e_descartado_mesmo_internacional():
+    # clipping nacional genérico não entra: a newsletter é do Centro-Oeste
     itens = _filtro().aplicar([
         _noticia("China amplia compras de soja do Brasil", nacional=True),
-    ])
-    assert itens[0].uf == "BR" and itens[0].internacional
-
-
-def test_nacional_sem_mencao_e_sem_foco_internacional_e_descartado():
-    itens = _filtro().aplicar([
         _noticia("Empresa paulista lança aplicativo", nacional=True),
     ])
     assert itens == []
+
+
+def test_nacional_internacional_com_mencao_regional_entra_com_destaque():
+    itens = _filtro().aplicar([
+        _noticia("China amplia compras de soja de Mato Grosso", nacional=True),
+    ])
+    assert itens[0].uf == "MT" and itens[0].internacional
 
 
 def test_licitacoes_e_diarios_passam_direto():

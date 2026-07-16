@@ -21,7 +21,7 @@ def sessao(fixtures_dir):
         "https://g1.globo.com/rss/g1/goias/": RespostaFalsa(conteudo=xml),
         "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao":
             RespostaFalsa(json_data=pncp),
-        "https://queridodiario.ok.org.br/api/gazettes": RespostaFalsa(json_data=qd),
+        "https://api.queridodiario.ok.org.br/gazettes": RespostaFalsa(json_data=qd),
         # demais feeds da config caem em ConnectionError -> rodapé de erros
     })
 

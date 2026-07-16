@@ -66,6 +66,30 @@ def test_paginacao_para_em_pagina_vazia(fixtures_dir):
     assert paginas == [1, 2]
 
 
+def test_429_espera_e_tenta_de_novo(fixtures_dir):
+    pagina = json.loads((fixtures_dir / "pncp_publicacao.json").read_text())
+    sessao = SessaoFalsa({
+        "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao": [
+            RespostaFalsa(status=429, headers={"Retry-After": "2"}),
+            RespostaFalsa(json_data=pagina),
+        ],
+    })
+    itens = buscar_pncp(sessao, CFG, ("GO",), *JANELA)
+    assert len(itens) == 1  # segunda tentativa (pós rate-limit) funcionou
+
+
+def test_erro_em_uma_uf_nao_descarta_as_demais(fixtures_dir):
+    pagina = json.loads((fixtures_dir / "pncp_publicacao.json").read_text())
+    sessao = SessaoFalsa({
+        "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao": [
+            RespostaFalsa(json_data=pagina),      # GO ok
+            RespostaFalsa(status=404),            # MT falha
+        ],
+    })
+    itens = buscar_pncp(sessao, CFG, ("GO", "MT"), *JANELA)
+    assert [i.uf for i in itens] == ["GO"]
+
+
 def test_deduplica_registros_repetidos(fixtures_dir):
     pagina = json.loads((fixtures_dir / "pncp_publicacao.json").read_text())
     cfg = ConfigPNCP(base_url=CFG.base_url, modalidades=(6, 8), valor_minimo=500000)

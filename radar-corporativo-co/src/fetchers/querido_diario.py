@@ -27,7 +27,14 @@ def buscar_querido_diario(sessao: requests.Session, cfg: ConfigQueridoDiario,
             ("size", cfg.size),
         ] + [("territory_ids", cod) for cod in territorios]
         resposta = get_com_retry(sessao, f"{cfg.base_url}/gazettes", params=params)
-        corpo = resposta.json() or {}
+        try:
+            corpo = resposta.json() or {}
+        except ValueError as exc:
+            inicio_corpo = resposta.content[:120].decode("utf-8", errors="replace")
+            raise requests.RequestException(
+                f"resposta de {cfg.base_url}/gazettes não é JSON "
+                f"(confira o base_url na config): {inicio_corpo!r}"
+            ) from exc
         for gazeta in corpo.get("gazettes") or []:
             url = gazeta.get("url") or gazeta.get("txt_url") or ""
             if not url:

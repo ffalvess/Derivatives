@@ -82,7 +82,11 @@ def buscar_rss(sessao: requests.Session, fonte: FonteRSS,
 
 
 def checar_fonte(sessao: requests.Session, fonte: FonteRSS) -> tuple[bool, str]:
-    """Valida um feed: retorna (ok, mensagem) para o modo --checar-fontes."""
+    """Valida um feed e diagnostica o conteúdo: além de OK/FALHA, informa
+    quantas entradas têm link/título/data e quantas caem na última semana —
+    é isso que decide se a entrada entra na edição."""
+    from datetime import date as _date, timedelta
+
     for url in filter(None, (fonte.url, fonte.url_alternativa)):
         try:
             resposta = get_com_retry(sessao, url)
@@ -90,7 +94,24 @@ def checar_fonte(sessao: requests.Session, fonte: FonteRSS) -> tuple[bool, str]:
             mensagem = f"falha em {url}: {exc}"
             continue
         entradas = _parse_feed(resposta.content)
-        if entradas:
-            return True, f"OK ({len(entradas)} itens) via {url}"
-        mensagem = f"resposta de {url} não parece RSS/Atom"
+        if not entradas:
+            mensagem = f"resposta de {url} não parece RSS/Atom"
+            continue
+
+        hoje = _date.today()
+        com_link = sum(1 for e in entradas if (e.get("link") or "").strip())
+        com_titulo = sum(1 for e in entradas if (e.get("title") or "").strip())
+        datas = [_data_entrada(e) for e in entradas]
+        com_data = [d for d in datas if d is not None]
+        na_semana = sum(1 for d in com_data if hoje - timedelta(days=7) <= d <= hoje)
+        sem_data = len(entradas) - len(com_data)
+
+        detalhe = (f"{len(entradas)} itens ({com_link} c/ link, {com_titulo} c/ título, "
+                   f"{sem_data} sem data, {na_semana} na última semana")
+        if com_data:
+            detalhe += f", mais recente {max(com_data).isoformat()}"
+        exemplo_data = entradas[0].get("published") or entradas[0].get("updated")
+        if exemplo_data:
+            detalhe += f", ex.: {exemplo_data!r}"
+        return True, f"OK ({detalhe}) via {url}"
     return False, mensagem

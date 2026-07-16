@@ -17,14 +17,23 @@ def criar_sessao() -> requests.Session:
 
 def get_com_retry(sessao: requests.Session, url: str, *, params: dict | list | None = None,
                   timeout: int = TIMEOUT) -> requests.Response:
-    """GET com uma única retentativa em erro de rede ou 5xx.
+    """GET com uma única retentativa em erro de rede, 5xx ou 429.
 
-    Erros 4xx não são retentados: o recurso não existe ou o pedido é inválido.
+    Em 429 (rate limit) espera o Retry-After informado pelo servidor (teto de
+    30s) antes de tentar de novo. Demais 4xx não são retentados: o recurso
+    não existe ou o pedido é inválido.
     """
     ultima_excecao: Exception | None = None
     for tentativa in range(2):
         try:
             resposta = sessao.get(url, params=params, timeout=timeout)
+            if tentativa == 0 and resposta.status_code == 429:
+                try:
+                    espera = int(resposta.headers.get("Retry-After", 5))
+                except (TypeError, ValueError):
+                    espera = 5
+                time.sleep(min(max(espera, 1), 30))
+                continue
             if resposta.status_code >= 500 and tentativa == 0:
                 time.sleep(1)
                 continue

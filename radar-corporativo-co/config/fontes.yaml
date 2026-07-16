@@ -95,8 +95,9 @@ filtro:
     - trading
     - multinacional
     - acordo comercial
-    - tarifa
-    - tarifas
+    - tarifa de importação
+    - tarifaço
+    - barreira comercial
     - china
     - chinês
     - chinesa
@@ -161,7 +162,9 @@ pncp:
   valor_minimo: 500000       # só licitações com valorTotalEstimado >= R$ 500 mil
 
 querido_diario:
-  base_url: "https://queridodiario.ok.org.br/api"
+  # Atenção: o host da API é api.queridodiario.ok.org.br
+  # (queridodiario.ok.org.br/api devolve a página do site, não JSON)
+  base_url: "https://api.queridodiario.ok.org.br"
   # Cobertura do QD é municipal: capitais + polos econômicos/do agro (códigos IBGE).
   territorios:
     GO: [5208707, 5201108, 5201405, 5218805]   # Goiânia, Anápolis, Ap. de Goiânia, Rio Verde

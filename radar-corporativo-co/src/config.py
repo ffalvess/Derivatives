@@ -39,6 +39,7 @@ class ConfigPNCP:
     tamanho_pagina: int = 50
     max_paginas_por_uf: int = 4
     valor_minimo: float = 0.0
+    pausa_segundos: float = 1.0   # entre requisições (a API limita a taxa)
 
 
 @dataclass(frozen=True)
@@ -95,6 +96,7 @@ def carregar_config(caminho: Path | str = CAMINHO_CONFIG_PADRAO) -> Config:
         tamanho_pagina=int(bruto["pncp"].get("tamanho_pagina", 50)),
         max_paginas_por_uf=int(bruto["pncp"].get("max_paginas_por_uf", 4)),
         valor_minimo=float(bruto["pncp"].get("valor_minimo", 0)),
+        pausa_segundos=float(bruto["pncp"].get("pausa_segundos", 1.0)),
     )
 
     qd_bruto = bruto["querido_diario"]

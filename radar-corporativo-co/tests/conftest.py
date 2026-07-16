@@ -7,10 +7,11 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 
 class RespostaFalsa:
-    def __init__(self, conteudo: bytes = b"", json_data=None, status=200):
+    def __init__(self, conteudo: bytes = b"", json_data=None, status=200, headers=None):
         self.content = conteudo
         self._json = json_data
         self.status_code = status
+        self.headers = headers or {}
 
     def json(self):
         return self._json
@@ -49,3 +50,4 @@ def fixtures_dir():
 @pytest.fixture(autouse=True)
 def sem_sleep(monkeypatch):
     monkeypatch.setattr("src.fetchers.http.time.sleep", lambda _s: None)
+    monkeypatch.setattr("src.fetchers.pncp.time.sleep", lambda _s: None)
