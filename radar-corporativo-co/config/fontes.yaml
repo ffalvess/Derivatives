@@ -36,11 +36,12 @@ rss:
     uf: MS
     url: "https://midiamax.com.br/feed/"
     verificado: true
-  - nome: "Correio Braziliense (Economia)"
+  # Feed geral do site (o feed específico de economia não existe mais);
+  # o filtro de relevância corta o que não for corporativo.
+  - nome: "Correio Braziliense"
     uf: DF
-    url: "https://www.correiobraziliense.com.br/economia/feed"
-    url_alternativa: "https://www.correiobraziliense.com.br/feed"
-    verificado: false
+    url: "https://www.correiobraziliense.com.br/feed"
+    verificado: true
 
   # --- Nacionais de economia/agro (itens entram só se atribuíveis à região
   #     ou ao foco internacional; ver filtro/cidades_uf) ---
@@ -57,10 +58,12 @@ rss:
     url: "https://pox.globo.com/rss/globorural/"
     url_alternativa: "https://g1.globo.com/rss/g1/economia/agronegocios/"
     verificado: true
+  # URL do feed ainda não localizada (candidatas /rss/, /rss/noticias e /feed
+  # retornam 404). Para achar: abrir noticiasagricolas.com.br, Ctrl+U e buscar
+  # "application/rss". Se o site não expõe mais RSS, remover esta fonte.
   - nome: "Notícias Agrícolas"
     abrangencia: nacional
     url: "https://www.noticiasagricolas.com.br/rss/noticias"
-    url_alternativa: "https://www.noticiasagricolas.com.br/feed"
     verificado: false
   - nome: "Canal Rural"
     abrangencia: nacional
